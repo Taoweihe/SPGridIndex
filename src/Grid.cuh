@@ -45,13 +45,21 @@ namespace muda{
         MUDA_HOST void build_map(muda::BufferView<uint64_t> offset_key ,
                                        muda::BufferView<int> index){
             grid_hash_build(offset_key, index);
-            Grid_build_topology();
+            std::cout<<"complte_build_hash"<<std::endl;
+            counter_cache();
+            std::cout<<"begin supple"<<std::endl;
             supplementAdjancentBlocks();
+            std::cout<<"supple,emtAdkamcentBlocks"<<std::endl;
+            Grid_build_topology();
+            std::cout<<"complete_build_topology"<<std::endl;
+            
                                        }
 
         MUDA_HOST void grid_hash_build(muda::BufferView<uint64_t> offset_key ,
                                        muda::BufferView<int> index);
         
+        MUDA_GENERIC void counter_cache(){block_counter_before_adjancent_cache = block_counter;}
+
         MUDA_HOST void Grid_build_topology();
 
         MUDA_HOST void supplementAdjancentBlocks();
@@ -141,7 +149,7 @@ namespace muda{
     MUDA_HOST void Grid<GridLayout,TransformValueType>::grid_hash_build(muda::BufferView<uint64_t> offset_key,
                                                    muda::BufferView<int> index)
     {
-                          muda::ParallelFor().apply(index.size(),[
+        muda::ParallelFor().apply(index.size(),[
         index         = index.viewer().name("particle_index"),
         offset_key    = offset_key.viewer().name("particle_morton_key"),
         tablesize     = m_num_blocks,
