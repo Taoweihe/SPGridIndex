@@ -37,7 +37,7 @@ namespace SParseGrid{
     {}
 
     GridViewer(size_t                    num_blocks ,
-               Eigen::Vector<auto_const_t<int> , 3> transform ,
+               Eigen::Vector<auto_const_t<TransformValueType> , 3>* transform ,
                auto_const_t<uint64_t>*  key ,
                auto_const_t<int>*       value ,
                auto_const_t<uint64_t>*  block_id2key ,
@@ -102,7 +102,7 @@ namespace SParseGrid{
     protected:
 
     size_t num_blocks;
-    Eigen::Vector<auto_const_t<int>, 3> transform;
+    Eigen::Vector<auto_const_t<TransformValueType>, 3>* transform;
 
     auto_const_t<uint64_t>* key;
     auto_const_t<int>*      value;

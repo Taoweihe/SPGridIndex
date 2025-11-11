@@ -20,7 +20,7 @@ namespace muda{
         MUDA_GENERIC Eigen::Vector3i offset(){return m_offset;}
         MUDA_GENERIC int topology(){return topology_id;};
         
-        neibour result(){
+        neibour &result(){
 
             Eigen::Vector3i linear_vec = linear_decode<GridLayout , int>(m_cell_id);
             linear_vec += m_offset;
@@ -33,7 +33,7 @@ namespace muda{
             int topology_id_z_new = linear_vec(2) / GridLayout::nz + 1;
             
              topology_id = topology_id_x_new + topology_id_y_new * 3 + topology_id_z_new * 9;
-             return this;
+             return *this;
         };   
 
         int m_block_id;
@@ -53,18 +53,18 @@ namespace muda{
         Coordinate(const CoordinateType& morton_coordinate):morton_coordinate(morton_coordinate){};
         
         template<typename VecType = int>
-        MUDA_GENERIC VecType toVec() const{
-            VecType coord_vec;
-            GridLayout::template decode<CoordinateType , VecType>(morton_coordinate , coord_vec);
+        MUDA_GENERIC Eigen::Vector<VecType,3> toVec() const{
+            Eigen::Vector<VecType,3> coord_vec;
+            coord_vec = decode<CoordinateType , VecType>(morton_coordinate);
             return coord_vec;
         }
         
         template<typename VecType>
-        MUDA_GENERIC  Coordinate fromVec(const Eigen::Vector<VecType ,3>& coord_vec){
+        MUDA_GENERIC  Coordinate& fromVec(const Eigen::Vector<VecType ,3>& coord_vec){
             Eigen::Vector3i vec = bound_round(coord_vec);
             CoordinateType morton_code = encode<CoordinateType , int>(vec);
             morton_coordinate = morton_code;
-            return this;
+            return *this;
         };
         
         MUDA_GENERIC CoordinateType block_key() const{
@@ -72,8 +72,8 @@ namespace muda{
         }
 
         MUDA_GENERIC int cell_index() const{
-            uint32_t code = morton_coordinate & (GridLayout::log2_voxel_num - 1);
-            auto Vec = decode_morton<CoordinateType , int> ;
+            uint32_t code = morton_coordinate & ((1 << GridLayout::log2_voxel_num) - 1);
+            auto Vec = decode_morton<CoordinateType , int>(code) ;
             int local_index = linear_encode<GridLayout , int>(Vec);
 
         }

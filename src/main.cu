@@ -33,11 +33,11 @@ int main(){
             position(i) = Eigen::Vector3f(float(i) * 0.01f+10 , float(i) * 0.01f +10 , float(i) * 0.01f +10);
             offset_key(i) = muda::SParseGrid::encode_morton<uint64_t , float>(position(i));
             density(i) = 1.0f;
-        });
+        }).wait();
 
         gridIndex.build_map(offset_key, index);
 
-        muda::Field field;
+        /*muda::Field field;
         auto & grid = field["grid"];
         float dt = 0.01f;
 
@@ -89,8 +89,9 @@ int main(){
 
             auto grid_data_index = gridIndex(coord);
 
-            auto particle_density = 
+            
         });
+        */
 
 
 

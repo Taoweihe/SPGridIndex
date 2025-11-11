@@ -38,7 +38,7 @@ namespace muda{
                 block_counter = 0;
                 block_counter_before_adjancent_cache = 0;
 
-                build(offset_key , index);
+                build_map(offset_key , index);
                                        }
         
 
@@ -120,18 +120,18 @@ namespace muda{
     template<typename GridLayout, typename TransformValueType>
     Grid<GridLayout,TransformValueType> make_grid(const size_t& num_blocks ,
               const Eigen::Vector<TransformValueType , 3>& dx = Eigen::Vector<TransformValueType,3>(1.0f , 1.0f ,1.0f) ){
-                  return Gird<GridLayout,TransformValueType>(num_blocks , dx).view();
+                  return Grid<GridLayout,TransformValueType>(num_blocks , dx);
               };
     template<typename TransformValueType = float>
     Grid<GridLayout<4,4,4> , TransformValueType> make_grid(const size_t& num_blocks ,
               const Eigen::Vector<TransformValueType , 3>& dx = Eigen::Vector<TransformValueType,3>(1.0f , 1.0f ,1.0f) ){
-                  return Gird<GridLayout<4,4,4> ,TransformValueType>(num_blocks , dx).view();
+                  return Grid<GridLayout<4,4,4> ,TransformValueType>(num_blocks , dx);
               };
     
     template<typename TransformValueType , size_t block_nx , size_t block_ny , size_t block_nz>
     Grid<GridLayout<block_nx , block_ny , block_nz> , TransformValueType> make_grid(const size_t& num_blocks ,
               const Eigen::Vector<TransformValueType , 3>& dx = Eigen::Vector<TransformValueType,3>(1.0f , 1.0f ,1.0f) ){
-                  return Gird<GridLayout<block_nx , block_ny , block_nz> ,TransformValueType>(num_blocks , dx).view();
+                  return Grid<GridLayout<block_nx , block_ny , block_nz> ,TransformValueType>(num_blocks , dx);
               };
     
     
