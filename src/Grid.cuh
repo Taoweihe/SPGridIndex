@@ -22,9 +22,9 @@ namespace muda{
              const Eigen::Vector<TransformValueType , 3>& dx ){
                m_num_blocks = num_blocks;
                key.resize(num_blocks , 0xffffffffffffffff);
-               value.resize(num_blocks , -1);
-               block_id2key.resize(num_blocks , 0xffffffffffffffff);
-               topology_cache.resize(num_blocks * 27 , -1);
+               value.resize(num_blocks , 0);
+               block_id2key.resize(num_blocks , 0);
+               topology_cache.resize(num_blocks * 27 , 0);
                block_counter = 0;
                block_counter_before_adjancent_cache = 0;
              }
@@ -47,6 +47,7 @@ namespace muda{
             grid_hash_build(offset_key, index);
             std::cout<<"complte_build_hash"<<std::endl;
             counter_cache();
+            
             std::cout<<"begin supple"<<std::endl;
             supplementAdjancentBlocks();
             std::cout<<"supple,emtAdkamcentBlocks"<<std::endl;
@@ -257,7 +258,7 @@ namespace muda{
                 }
             }
             
-
+            //print("thread {} exit", thread_id);
 
         }).wait();
     };
@@ -269,12 +270,13 @@ namespace muda{
 
         muda::ParallelFor().apply(m_num_blocks , [
 
-        tablesize     = m_num_blocks,
+        tablesize        = m_num_blocks,
         keyTable      = key.viewer().name("hash_key_table"),
         valueTable    = value.viewer().name("hash_value_table"),
         block_id2key  = block_id2key.viewer().name("block_id2morton_key"),
         topology      = topology_cache.viewer().name("topology_cache"),
         num_block     = block_counter_before_adjancent_cache.viewer().name("block_counter"),
+        
         block_counter = block_counter_before_adjancent_cache.viewer()
 
 

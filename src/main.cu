@@ -7,19 +7,19 @@
 int main(){
 
         auto  gridIndex = 
-        muda::SParseGrid::make_grid(1000);
+        muda::SParseGrid::make_grid(10000);
 
-        muda::DeviceBuffer<int> index(1000);
-        muda::DeviceBuffer<uint64_t> offset_key(1000);
-        muda::DeviceBuffer<float> density(1000);
-        muda::DeviceBuffer<Eigen::Vector3f> position(1000);
-        muda::DeviceBuffer<Eigen::Vector3f> velocity(1000);
-        muda::DeviceBuffer<Eigen::Matrix3f> C(1000);
-        muda::DeviceBuffer<Eigen::Vector3f> force(1000);
+        muda::DeviceBuffer<int> index(10000);
+        muda::DeviceBuffer<uint64_t> offset_key(10000);
+        muda::DeviceBuffer<float> density(10000);
+        muda::DeviceBuffer<Eigen::Vector3f> position(10000);
+        muda::DeviceBuffer<Eigen::Vector3f> velocity(10000);
+        muda::DeviceBuffer<Eigen::Matrix3f> C(10000);
+        muda::DeviceBuffer<Eigen::Vector3f> force(10000);
 
         //initialize particle data
 
-        muda::ParallelFor().apply(10000, 
+        muda::ParallelFor().apply(index.size(), 
         [
             index = index.viewer(),
             position = position.viewer(),
@@ -30,10 +30,24 @@ int main(){
 
 
             index(i) = i;
-            position(i) = Eigen::Vector3f(float(i) * 0.01f+10 , float(i) * 0.01f +10 , float(i) * 0.01f +10);
+            position(i) = Eigen::Vector3f(i +10 , i  +10 , i  +10);
             offset_key(i) = muda::SParseGrid::encode_morton<uint64_t , float>(position(i));
             density(i) = 1.0f;
         }).wait();
+
+
+    std::vector<uint64_t> h_particle_morton(1000);
+    std::vector<int> h_particle_index(1000);
+    for(int i = 0 ; i < 1000 ; i++){
+
+        h_particle_morton[i] = i;
+        h_particle_index[i] = i;
+    }
+     muda::DeviceBuffer<uint64_t> particle_morton;
+    muda::DeviceBuffer<int> index_;
+
+    particle_morton.copy_from(h_particle_morton);
+    index.copy_from(h_particle_index);
 
         gridIndex.build_map(offset_key, index);
 
